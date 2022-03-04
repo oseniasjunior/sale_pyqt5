@@ -1,0 +1,6 @@
+main.py
+requirements.txt
+views/__init__.py
+views/mainwindow.ui
+views/marital_status.ui
+views/marital_status_item.ui
