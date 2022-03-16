@@ -3,10 +3,12 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QDialog, QTableWidgetItem, QTa
 
 from core.connection import Database
 from core import helpers
+from core.services import BaseService
 from views.department import Ui_Department
 from views.mainwindow import Ui_MainWindow
 from views.marital_status import Ui_MaritalStatus
 from views.marital_status_item import Ui_MaritalStatusItem
+from dateutil.parser import parse
 
 
 class MainWindowController(QMainWindow, Ui_MainWindow):
@@ -50,11 +52,12 @@ class DepartmentController(QWidget, Ui_Department):
         self.setupUi(self)
         self.table_department.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.btn_search.clicked.connect(self._search)
-        self.db = Database()
+        # self.db = Database()
+        self.service = BaseService()
         self._search()
 
     def _search(self):
-        results = self.db.search('department')
+        results = self.service.search(router='department')
         self.table_department.setRowCount(len(results))
 
         for index, item in enumerate(results):
@@ -65,7 +68,7 @@ class DepartmentController(QWidget, Ui_Department):
             name.setText(str(item['name']))
 
             modified_at = QTableWidgetItem()
-            modified_at.setText(helpers.format_date(item['modified_at']))
+            modified_at.setText(helpers.format_date(parse(item['modified_at'])))
 
             active = QCheckBox()
             active.setChecked(item['active'])
